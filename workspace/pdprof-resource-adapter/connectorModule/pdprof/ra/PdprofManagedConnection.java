@@ -23,12 +23,14 @@ public class PdprofManagedConnection implements ManagedConnection {
 	private PrintWriter logWriter;
 	private List<ConnectionEventListener> listeners;
 	private Object connection;
-
+	private PdprofXAResource xaResource;
+	
 	public PdprofManagedConnection(PdprofManagedConnectionFactory mcf) {
 		this.mcf = mcf;
 		this.logWriter = null;
 		this.listeners = new ArrayList<ConnectionEventListener>(1);
 		this.connection = null;
+		this.xaResource = new PdprofXAResource(this);
 	}
 
 	public Object getConnection(Subject subject, ConnectionRequestInfo cxRequestInfo) throws ResourceException {
@@ -72,7 +74,7 @@ public class PdprofManagedConnection implements ManagedConnection {
 	}
 
 	public XAResource getXAResource() throws ResourceException {
-		throw new NotSupportedException("GetXAResource not supported");
+        return this.xaResource;
 	}
 
 	public ManagedConnectionMetaData getMetaData() throws ResourceException {
@@ -86,6 +88,16 @@ public class PdprofManagedConnection implements ManagedConnection {
 		
 			cel.connectionClosed(event);
 		}
+	}
+	
+	public int getPrepareTimeout() {
+		 PdprofConnectionImpl con = (PdprofConnectionImpl)this.connection;
+		 return con.getPrepareTime();
+	}
+	
+	public int getCommitTimeout() {
+		 PdprofConnectionImpl con = (PdprofConnectionImpl)this.connection;
+		 return con.getCommitTime();
 	}
 
 }

@@ -18,6 +18,7 @@
 				<connection-interface>pdprof.ra.PdprofConnection</connection-interface>
 				<connection-impl-class>pdprof.ra.PdprofConnectionImpl</connection-impl-class>
 			</connection-definition>
+			<transaction-support>XATransaction</transaction-support>
 		</outbound-resourceadapter>
 	</resourceadapter>
 </connector>

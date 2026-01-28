@@ -13,7 +13,7 @@ import javax.resource.spi.TransactionSupport;
 import javax.resource.spi.endpoint.MessageEndpointFactory;
 import javax.transaction.xa.XAResource;
 
-@Connector(reauthenticationSupport = false, transactionSupport = TransactionSupport.TransactionSupportLevel.NoTransaction)
+@Connector(reauthenticationSupport = false, transactionSupport = TransactionSupport.TransactionSupportLevel.XATransaction)
 public class PdprofResourceAdapter implements ResourceAdapter {
 	
 	private static Logger log = Logger.getLogger("PdprofResourceAdapter");
@@ -45,7 +45,7 @@ public class PdprofResourceAdapter implements ResourceAdapter {
 	}
 
 	public XAResource[] getXAResources(ActivationSpec[] specs) throws ResourceException {
-		return null;
+		return new XAResource[] { new PdprofXAResource(null) };
 	}
 
 	@Override

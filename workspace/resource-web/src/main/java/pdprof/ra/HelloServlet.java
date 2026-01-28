@@ -10,6 +10,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.SystemException;
+import javax.transaction.UserTransaction;
 
 /**
  * Servlet implementation class HelloServlet
@@ -21,6 +27,16 @@ public class HelloServlet extends HttpServlet {
 	@Resource(name="ra/pdprofcf")
 	ConnectionFactory cf;
 	
+	@Resource(name="ra/secondcf")
+	ConnectionFactory secondcf;
+	
+    @Resource
+    private UserTransaction ut;
+    
+    private int sleepTime = 0;
+    private int prepareTime = 0;
+    private int commitTime = 0;
+    
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -32,12 +48,26 @@ public class HelloServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		sleepTime = getTime(request.getParameter("sleepTime"));
+		prepareTime = getTime(request.getParameter("prepareTime"));
+		commitTime = getTime(request.getParameter("commitTime"));
+		System.out.println("> HelloServlet.doGet start (sleep time in ms = " + sleepTime + ")");
 		try {
+			ut.begin();
+			Thread.sleep(sleepTime);
 			PdprofConnection con = (PdprofConnection)cf.getConnection();
-			response.getWriter().append("Message from Resource Adapter : ").append(con.hello());
-		} catch (ResourceException e) {
+			con.setPrepareTime(prepareTime);
+			con.setCommitTime(commitTime);
+			response.getWriter().append("Message from Resource Adapter : ").append(con.hello()).append("\n");
+			PdprofConnection con2 = (PdprofConnection)secondcf.getConnection();
+			con2.setPrepareTime(prepareTime);
+			con2.setCommitTime(commitTime);
+			response.getWriter().append("Message from Resource Adapter : ").append(con2.hello("!!!!"));
+			ut.commit();
+		} catch (ResourceException | NotSupportedException | SystemException | SecurityException | IllegalStateException | RollbackException | HeuristicMixedException | HeuristicRollbackException | InterruptedException e) {
 			e.printStackTrace();
 		}
+		System.out.println("> HelloServlet.doGet end");
 
 	}
 
@@ -47,5 +77,17 @@ public class HelloServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
 	}
-
+	
+	private int getTime(String timeStr) {
+		if (timeStr != null) {
+			try {
+				return Integer.parseInt(timeStr);
+			} catch (Exception e) {
+				return 0;
+			}
+		} else {
+			return 0;
+		}
+	}
+	
 }
