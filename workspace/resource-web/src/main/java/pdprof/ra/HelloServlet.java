@@ -51,14 +51,14 @@ public class HelloServlet extends HttpServlet {
 		sleepTime = getTime(request.getParameter("sleepTime"));
 		prepareTime = getTime(request.getParameter("prepareTime"));
 		commitTime = getTime(request.getParameter("commitTime"));
-		System.out.println("> HelloServlet.doGet start (sleep time in ms = " + sleepTime + ")");
+		System.out.println("> HelloServlet.doGet start");
 		try {
 			System.out.println("= HelloServlet.doGet call   > ut.begin()");
 			ut.begin();
-			System.out.println("= HelloServlet.doGet called > ut.begin()");
+			System.out.println("= HelloServlet.doGet called < ut.begin()");
 			System.out.println("= HelloServlet.doGet call   > sleep time in ms = " + sleepTime);
 			Thread.sleep(sleepTime);
-			System.out.println("= HelloServlet.doGet called > sleep");
+			System.out.println("= HelloServlet.doGet called < sleep");
 			PdprofConnection con = (PdprofConnection)cf.getConnection();
 			con.setPrepareTime(prepareTime);
 			con.setCommitTime(commitTime);
@@ -73,7 +73,7 @@ public class HelloServlet extends HttpServlet {
 		} catch (ResourceException | NotSupportedException | SystemException | SecurityException | IllegalStateException | RollbackException | HeuristicMixedException | HeuristicRollbackException | InterruptedException e) {
 			e.printStackTrace();
 		}
-		System.out.println("> HelloServlet.doGet end");
+		System.out.println("< HelloServlet.doGet end");
 
 	}
 

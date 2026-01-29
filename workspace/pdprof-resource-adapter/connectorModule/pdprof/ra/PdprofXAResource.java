@@ -15,7 +15,9 @@ public class PdprofXAResource implements XAResource {
 	public void commit(Xid xid, boolean onePhase) throws XAException {
 		System.out.println("> PdprofXAResource.commit start (sleep time in ms = " + pdcon.getCommitTimeout() + ")");
 		try {
-			Thread.sleep(pdcon.getCommitTimeout());
+			if (pdcon != null) {
+				Thread.sleep(pdcon.getCommitTimeout());
+			}
 		} catch (Exception e) {
 		}
 		System.out.println("< PdprofXAResource.commit end id = " + xid.getFormatId() + " isOnePhase = " + onePhase);

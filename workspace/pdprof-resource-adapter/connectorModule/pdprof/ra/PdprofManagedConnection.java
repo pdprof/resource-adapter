@@ -92,12 +92,18 @@ public class PdprofManagedConnection implements ManagedConnection {
 	
 	public int getPrepareTimeout() {
 		 PdprofConnectionImpl con = (PdprofConnectionImpl)this.connection;
-		 return con.getPrepareTime();
+		 if (con != null)
+			 return con.getPrepareTime();
+		 else 
+			 return 0;
 	}
 	
 	public int getCommitTimeout() {
 		 PdprofConnectionImpl con = (PdprofConnectionImpl)this.connection;
-		 return con.getCommitTime();
+		 if (con != null)
+			 return con.getCommitTime();
+		 else 
+			 return 0;
 	}
 
 }
