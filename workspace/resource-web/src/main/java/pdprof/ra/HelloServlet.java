@@ -53,8 +53,12 @@ public class HelloServlet extends HttpServlet {
 		commitTime = getTime(request.getParameter("commitTime"));
 		System.out.println("> HelloServlet.doGet start (sleep time in ms = " + sleepTime + ")");
 		try {
+			System.out.println("= HelloServlet.doGet call   > ut.begin()");
 			ut.begin();
+			System.out.println("= HelloServlet.doGet called > ut.begin()");
+			System.out.println("= HelloServlet.doGet call   > sleep time in ms = " + sleepTime);
 			Thread.sleep(sleepTime);
+			System.out.println("= HelloServlet.doGet called > sleep");
 			PdprofConnection con = (PdprofConnection)cf.getConnection();
 			con.setPrepareTime(prepareTime);
 			con.setCommitTime(commitTime);
@@ -63,7 +67,9 @@ public class HelloServlet extends HttpServlet {
 			con2.setPrepareTime(prepareTime);
 			con2.setCommitTime(commitTime);
 			response.getWriter().append("Message from Resource Adapter : ").append(con2.hello("!!!!"));
+			System.out.println("= HelloServlet.doGet call   > ut.commit()");
 			ut.commit();
+			System.out.println("= HelloServlet.doGet called < ut.commit()");
 		} catch (ResourceException | NotSupportedException | SystemException | SecurityException | IllegalStateException | RollbackException | HeuristicMixedException | HeuristicRollbackException | InterruptedException e) {
 			e.printStackTrace();
 		}
