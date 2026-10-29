@@ -10,4 +10,6 @@ public interface PdprofConnection extends Connection {
 	public int getPrepareTime();
 	public void setCommitTime(int commitTimeout);
 	public int getCommitTime();
+	public void setName(String name);
+	public String getName();
 }

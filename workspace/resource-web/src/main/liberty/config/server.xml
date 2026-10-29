@@ -1,0 +1,79 @@
+<!-- 
+ (C) Copyright IBM Corporation 2017.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<server description="new server">
+
+    <!-- Enable features -->
+    <featureManager>
+        <feature>jsp-2.3</feature>
+        <feature>jca-1.7</feature>
+        <feature>jndi-1.0</feature>
+        <feature>localConnector-1.0</feature>
+    </featureManager>
+
+    <httpAccessLogging id="pdprofAccessLogging" logFormat="%h %u %t &quot;%r&quot; %s %b %{remote}p %D %{JSESSIONID}C %{Set-Cookie}o"/>
+    <!-- To access this server from a remote client add a host attribute to the following element, e.g. host="*" -->
+    <httpEndpoint accessLoggingRef="pdprofAccessLogging" httpPort="9080" httpsPort="9443" id="defaultHttpEndpoint" host="*"/>
+
+    <logging  traceSpecification="RRA=all:WAS.j2c=all:com.ibm.ws.jdbc.*=all:Transaction=all:ConnLeakLogic=all"
+      traceFileName="trace.log"
+      maxFileSize="20"
+      maxFiles="10"
+      traceFormat="BASIC" />
+
+   <basicRegistry id="basic">
+      <user name="wsadmin" password="passw0rd" />
+      <user name="reader" password="passw0rd" />
+   </basicRegistry>
+   <administrator-role>
+      <user>wsadmin</user>
+   </administrator-role>
+   <reader-role>
+      <user>reader</user>
+   </reader-role>
+
+    <!-- Automatically expand WAR files and EAR files -->
+    <applicationManager autoExpand="true"/>
+
+    <resourceAdapter id="PDPROFRA" location="/home/keniooi/git/resource-adapter/workspace/pdprof-resource-adapter/target/pdprof-resource-adapter-1.0.0-SNAPSHOT.jar"/>
+	
+    <connectionFactory jndiName="ra/pdprofcf">
+        <properties.PDPROFRA/>
+    </connectionFactory>
+
+    <connectionFactory jndiName="ra/secondcf">
+	<properties.PDPROFRA/>
+    </connectionFactory>
+
+    <connectionFactory jndiName="ra/resourceA">
+        <properties.PDPROFRA/>
+    </connectionFactory>
+
+    <connectionFactory jndiName="ra/resourceB">
+        <properties.PDPROFRA/>
+    </connectionFactory>
+	
+    <!-- Default SSL configuration enables trust for default certificates from the Java runtime --> 
+    <ssl id="defaultSSLConfig" trustDefaultCerts="true"/>
+    
+    <webApplication id="resource-web" location="resource-web.war" name="resource-web">
+        <classloader classProviderRef="PDPROFRA" />
+        <web-ext>
+            <resource-ref name="ra/resourceA" commit-priority="10"/>
+            <resource-ref name="ra/resourceB" commit-priority="5"/>
+        </web-ext>
+    </webApplication>
+
+</server>

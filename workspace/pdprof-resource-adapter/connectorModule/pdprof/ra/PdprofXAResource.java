@@ -13,29 +13,29 @@ public class PdprofXAResource implements XAResource {
 
 	@Override
 	public void commit(Xid xid, boolean onePhase) throws XAException {
-		System.out.println("> PdprofXAResource.commit start (sleep time in ms = " + pdcon.getCommitTimeout() + ")");
+		System.out.println("> " + pdcon.getName() + ": PdprofXAResource.commit start (sleep time in ms = " + pdcon.getCommitTimeout() + ")");
 		try {
 			if (pdcon != null) {
 				Thread.sleep(pdcon.getCommitTimeout());
 			}
 		} catch (Exception e) {
 		}
-		System.out.println("< PdprofXAResource.commit end id = " + xid.getFormatId() + " isOnePhase = " + onePhase);
+		System.out.println("< " + pdcon.getName() + ": PdprofXAResource.commit end id = " + xid.getFormatId() + " isOnePhase = " + onePhase);
 	}
 
 	@Override
 	public void end(Xid xid, int flags) throws XAException {
-		System.out.println("= PdprofXAResource.end - " + xid.getFormatId() + " flags = " + flags);
+		System.out.println("= " + pdcon.getName() + ": PdprofXAResource.end - " + xid.getFormatId() + " flags = " + flags);
 	}
 
 	@Override
 	public void forget(Xid xid) throws XAException {
-		System.out.println("= PdprofXAResource.forget - " + xid.getFormatId());
+		System.out.println("= " + pdcon.getName() + ": PdprofXAResource.forget - " + xid.getFormatId());
 	}
 
 	@Override
 	public int getTransactionTimeout() throws XAException {
-		System.out.println("= PdprofXAResource.getTransactionTimeout value = " + transactionTimeout);
+		System.out.println("= " + pdcon.getName() + ": PdprofXAResource.getTransactionTimeout value = " + transactionTimeout);
 		return transactionTimeout;
 	}
 
@@ -46,36 +46,36 @@ public class PdprofXAResource implements XAResource {
 
 	@Override
 	public int prepare(Xid xid) throws XAException {
-		System.out.println("> PdprofXAResource.prepare start (sleep time in ms = " + pdcon.getPrepareTimeout() + ")");
+		System.out.println("> " + pdcon.getName() + ": PdprofXAResource.prepare start (sleep time in ms = " + pdcon.getPrepareTimeout() + ")");
 		try {
 			Thread.sleep(pdcon.getPrepareTimeout());
 		} catch (Exception e) {
 		}
-		System.out.println("< PdprofXAResource.prepare end id = " + xid.getFormatId());
+		System.out.println("< " + pdcon.getName() + ": PdprofXAResource.prepare end id = " + xid.getFormatId());
 		return XA_OK;
 	}
 
 	@Override
 	public Xid[] recover(int flag) throws XAException {
-		System.out.println("= PdprofXAResource.recover");
+		System.out.println("= " + pdcon.getName() + ": PdprofXAResource.recover");
 		return null;
 	}
 
 	@Override
 	public void rollback(Xid xid) throws XAException {
-		System.out.println("= PdprofXAResource.rollback - " + xid.getFormatId());
+		System.out.println("= " + pdcon.getName() + ": PdprofXAResource.rollback - " + xid.getFormatId());
 	}
 
 	@Override
 	public boolean setTransactionTimeout(int seconds) throws XAException {
-		System.out.println("= PdprofXAResource.setTransactionTimeout value = " + seconds);
+		System.out.println("= " + pdcon.getName() + ": PdprofXAResource.setTransactionTimeout value = " + seconds);
 		transactionTimeout = seconds;
 		return true;
 	}
 
 	@Override
 	public void start(Xid xid, int flags) throws XAException {
-		System.out.println("= PdprofXAResource.start - " + xid.getFormatId() + " flags = " + flags);
+		System.out.println("= " + pdcon.getName() + ": PdprofXAResource.start - " + xid.getFormatId() + " flags = " + flags);
 	}
 
 }

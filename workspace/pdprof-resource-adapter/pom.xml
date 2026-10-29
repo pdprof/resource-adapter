@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- Basic coordinates; adjust groupId/artifactId as needed -->
+    <groupId>pdprof</groupId>
+    <artifactId>pdprof-resource-adapter</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>PDProf Resource Adapter</name>
+    <description>Maven build for the PDProf JCA resource adapter.</description>
+
+    <properties>
+        <!-- Java version used by the original Eclipse project -->
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <!-- The original Eclipse layout placed Java sources under 'connectorModule' -->
+    <build>
+        <sourceDirectory>connectorModule</sourceDirectory>
+        <resources>
+            <resource>
+                <!-- META-INF files (ra.xml, MANIFEST.MF, etc.) are required at runtime -->
+                <directory>connectorModule/META-INF</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <!-- Java EE Connector Architecture API -->
+        <dependency>
+            <groupId>javax.resource</groupId>
+            <artifactId>javax.resource-api</artifactId>
+            <version>1.7</version>
+        </dependency>
+    </dependencies>
+
+</project>

@@ -15,6 +15,7 @@ public class PdprofConnectionImpl implements PdprofConnection {
 	private PdprofManagedConnectionFactory mcf;
 	private int prepareTime = 0;
 	private int commitTime= 0;
+	private String name = "PdprofConnectionImpl";
 
 	public PdprofConnectionImpl(PdprofManagedConnection mc, PdprofManagedConnectionFactory mcf) {
 		this.mc = mc;
@@ -52,6 +53,17 @@ public class PdprofConnectionImpl implements PdprofConnection {
 	public int getCommitTime() {
 		return commitTime;
 	}
+
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	@Override
 	public void close() {
 		System.out.println("= PdprofConnectionImpl.close()");

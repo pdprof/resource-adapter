@@ -35,11 +35,19 @@
     <resourceAdapter id="PDPROFRA" location="/config/pdprof-resource-adapter.rar"/>
 	
     <connectionFactory jndiName="ra/pdprofcf">
-	<properties.PDPROFRA/>
+        <properties.PDPROFRA/>
     </connectionFactory>
-	
+
     <connectionFactory jndiName="ra/secondcf">
 	<properties.PDPROFRA/>
+    </connectionFactory>
+
+    <connectionFactory jndiName="ra/resourceA">
+        <properties.PDPROFRA/>
+    </connectionFactory>
+
+    <connectionFactory jndiName="ra/resourceB">
+        <properties.PDPROFRA/>
     </connectionFactory>
     
     <!-- Default SSL configuration enables trust for default certificates from the Java runtime --> 
@@ -47,7 +55,12 @@
 
     <applicationMonitor updateTrigger="mbean"/>
 
-    <enterpriseApplication id="resource-ear" location="resource-ear.ear" name="resource-ear">
-    	<classloader classProviderRef="PDPROFRA" />
-    </enterpriseApplication>
+    <webApplication id="resource-web" location="resource-web.war" name="resource-web">
+        <classloader classProviderRef="PDPROFRA" />
+        <web-ext>
+            <resource-ref name="ra/resourceA" commit-priority="5"/>
+            <resource-ref name="ra/resourceB" commit-priority="10"/>
+        </web-ext>
+    </webApplication>
+
 </server>

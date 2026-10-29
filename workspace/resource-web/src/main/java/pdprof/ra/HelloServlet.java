@@ -37,7 +37,7 @@ public class HelloServlet extends HttpServlet {
     private int prepareTime = 0;
     private int commitTime = 0;
     
-    /**
+    /** 	
      * @see HttpServlet#HttpServlet()
      */
     public HelloServlet() {
@@ -60,10 +60,12 @@ public class HelloServlet extends HttpServlet {
 			Thread.sleep(sleepTime);
 			System.out.println("= HelloServlet.doGet called < sleep");
 			PdprofConnection con = (PdprofConnection)cf.getConnection();
+			con.setName("cf");
 			con.setPrepareTime(prepareTime);
 			con.setCommitTime(commitTime);
 			response.getWriter().append("Message from Resource Adapter : ").append(con.hello()).append("\n");
 			PdprofConnection con2 = (PdprofConnection)secondcf.getConnection();
+			con2.setName("secondcf");
 			con2.setPrepareTime(prepareTime);
 			con2.setCommitTime(commitTime);
 			response.getWriter().append("Message from Resource Adapter : ").append(con2.hello("!!!!"));

@@ -106,4 +106,12 @@ public class PdprofManagedConnection implements ManagedConnection {
 			 return 0;
 	}
 
+	public String getName() {
+		 PdprofConnectionImpl con = (PdprofConnectionImpl)this.connection;
+		 if (con != null)
+			 return con.getName();
+		 else 
+			 return null;
+	}
+
 }
